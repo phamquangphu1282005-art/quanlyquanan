@@ -1,0 +1,955 @@
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FoodPOS - Quản lý quán ăn</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family:Arial, sans-serif;
+    background:#f5f6f8;
+    color:#202124;
+}
+
+/* SIDEBAR */
+.sidebar{
+    position:fixed;
+    left:0;
+    top:0;
+    width:240px;
+    height:100vh;
+    background:#171717;
+    color:white;
+    padding:25px 15px;
+}
+
+.logo{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:0 10px 30px;
+}
+
+.logo-icon{
+    width:42px;
+    height:42px;
+    background:#ff6b35;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+}
+
+.logo h2{
+    font-size:20px;
+}
+
+.logo span{
+    color:#ff6b35;
+}
+
+.menu-title{
+    color:#777;
+    font-size:11px;
+    margin:15px 12px 8px;
+    text-transform:uppercase;
+}
+
+.menu a{
+    display:flex;
+    align-items:center;
+    gap:13px;
+    padding:13px;
+    margin:5px 0;
+    color:#aaa;
+    text-decoration:none;
+    border-radius:10px;
+    font-size:14px;
+}
+
+.menu a:hover,
+.menu a.active{
+    background:#ff6b35;
+    color:white;
+}
+
+/* MAIN */
+.main{
+    margin-left:240px;
+    min-height:100vh;
+}
+
+.header{
+    height:72px;
+    background:white;
+    border-bottom:1px solid #eee;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 30px;
+}
+
+.search{
+    width:300px;
+}
+
+.search input{
+    width:100%;
+    padding:11px 15px;
+    border:1px solid #eee;
+    border-radius:9px;
+    outline:none;
+    background:#f7f7f7;
+}
+
+.user{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.avatar{
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:#ff6b35;
+    color:white;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:bold;
+}
+
+.user small{
+    color:#999;
+}
+
+/* CONTENT */
+.content{
+    padding:28px;
+}
+
+.title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:25px;
+}
+
+.title h1{
+    font-size:27px;
+}
+
+.title p{
+    color:#888;
+    margin-top:6px;
+    font-size:13px;
+}
+
+.btn{
+    background:#ff6b35;
+    color:white;
+    border:0;
+    padding:12px 18px;
+    border-radius:9px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.btn:hover{
+    background:#e95725;
+}
+
+/* STATS */
+.stats{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+}
+
+.stat{
+    background:white;
+    padding:20px;
+    border-radius:14px;
+    border:1px solid #eee;
+}
+
+.stat-top{
+    display:flex;
+    justify-content:space-between;
+}
+
+.icon{
+    width:42px;
+    height:42px;
+    border-radius:10px;
+    background:#fff0e9;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:20px;
+}
+
+.stat p{
+    color:#888;
+    font-size:12px;
+}
+
+.stat h2{
+    margin-top:15px;
+    font-size:24px;
+}
+
+.green{
+    color:#13a673;
+    font-size:11px;
+    margin-top:6px;
+}
+
+/* GRID */
+.grid{
+    display:grid;
+    grid-template-columns:1.5fr 1fr;
+    gap:20px;
+    margin-top:20px;
+}
+
+.card{
+    background:white;
+    border:1px solid #eee;
+    border-radius:14px;
+    padding:22px;
+}
+
+.card-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+}
+
+.card-title h2{
+    font-size:17px;
+}
+
+/* TABLES */
+.tables{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+}
+
+.table{
+    min-height:100px;
+    border-radius:12px;
+    padding:15px;
+    border:2px solid #ddd;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.table:hover{
+    transform:translateY(-3px);
+}
+
+.table strong{
+    display:block;
+    font-size:15px;
+    margin-bottom:12px;
+}
+
+.table small{
+    color:#777;
+}
+
+.free{
+    background:#effaf4;
+    border-color:#55c891;
+}
+
+.busy{
+    background:#fff0ed;
+    border-color:#ff6b35;
+}
+
+.wait{
+    background:#fff8e7;
+    border-color:#e8b13d;
+}
+
+/* LEGEND */
+.legend{
+    display:flex;
+    gap:15px;
+    margin-top:20px;
+    font-size:11px;
+    color:#777;
+}
+
+.dot{
+    width:9px;
+    height:9px;
+    display:inline-block;
+    border-radius:50%;
+    margin-right:4px;
+}
+
+.dot.free{
+    background:#42bd83;
+}
+
+.dot.busy{
+    background:#ff6b35;
+}
+
+.dot.wait{
+    background:#e8b13d;
+}
+
+/* FOOD */
+.food{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:11px 0;
+    border-bottom:1px solid #f1f1f1;
+}
+
+.food:last-child{
+    border-bottom:0;
+}
+
+.food-img{
+    width:52px;
+    height:52px;
+    object-fit:cover;
+    border-radius:10px;
+}
+
+.food-info{
+    flex:1;
+}
+
+.food-info strong{
+    display:block;
+    font-size:13px;
+}
+
+.food-info small{
+    color:#999;
+}
+
+.price{
+    font-weight:bold;
+    font-size:13px;
+}
+
+/* ORDERS */
+.orders{
+    margin-top:20px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th{
+    text-align:left;
+    color:#999;
+    font-size:11px;
+    padding:13px 10px;
+    border-bottom:1px solid #eee;
+}
+
+td{
+    padding:15px 10px;
+    font-size:12px;
+    border-bottom:1px solid #f1f1f1;
+}
+
+.status{
+    padding:5px 9px;
+    border-radius:20px;
+    font-size:10px;
+    font-weight:bold;
+}
+
+.done{
+    color:#149565;
+    background:#e9f9f2;
+}
+
+.cooking{
+    color:#3267c8;
+    background:#edf3ff;
+}
+
+.pending{
+    color:#b57b00;
+    background:#fff5dc;
+}
+
+/* CHART */
+.chart{
+    height:210px;
+    display:flex;
+    align-items:flex-end;
+    gap:15px;
+    border-bottom:1px solid #eee;
+    padding:10px;
+}
+
+.bar-wrap{
+    flex:1;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+}
+
+.bar{
+    width:65%;
+    background:#ff6b35;
+    border-radius:6px 6px 0 0;
+}
+
+.bar-wrap small{
+    color:#999;
+    margin-top:8px;
+}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+
+    .stats{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:700px){
+
+    .sidebar{
+        width:65px;
+        padding:20px 7px;
+    }
+
+    .logo h2,
+    .menu a span,
+    .menu-title{
+        display:none;
+    }
+
+    .logo{
+        justify-content:center;
+    }
+
+    .menu a{
+        justify-content:center;
+    }
+
+    .main{
+        margin-left:65px;
+    }
+
+    .stats{
+        grid-template-columns:1fr;
+    }
+
+    .tables{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .header{
+        padding:0 15px;
+    }
+
+    .search{
+        width:180px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+
+    <div class="logo">
+        <div class="logo-icon">🍴</div>
+        <h2>HIHI<span>HAHA</span></h2>
+    </div>
+
+    <div class="menu-title">QUẢN LÝ</div>
+
+    <nav class="menu">
+
+        <a href="#" class="active">
+            📊 <span>Tổng quan</span>
+        </a>
+
+        <a href="#">
+            🧾 <span>Đơn hàng</span>
+        </a>
+
+        <a href="#">
+            🍜 <span>Món ăn</span>
+        </a>
+
+        <a href="#">
+            🪑 <span>Bàn ăn</span>
+        </a>
+
+        <a href="#">
+            📂 <span>Danh mục</span>
+        </a>
+
+        <div class="menu-title">HỆ THỐNG</div>
+
+        <a href="#">
+            👥 <span>Khách hàng</span>
+        </a>
+
+        <a href="#">
+            👨‍🍳 <span>Nhân viên</span>
+        </a>
+
+        <a href="#">
+            📈 <span>Doanh thu</span>
+        </a>
+
+        <a href="#">
+            ⚙️ <span>Cài đặt</span>
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<!-- MAIN -->
+<main class="main">
+
+    <header class="header">
+
+        <div class="search">
+            🔎
+            <input type="text" placeholder="Tìm kiếm đơn hàng, món ăn...">
+        </div>
+
+        <div class="user">
+
+            <div class="avatar">P</div>
+
+            <div>
+                <strong>Phạm Quang Phú</strong><br>
+                <small>Quản trị viên</small>
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <section class="content">
+
+        <!-- TITLE -->
+        <div class="title">
+
+            <div>
+                <h1>Tổng quan quán ăn 👋</h1>
+                <p>Quản lý hoạt động kinh doanh của quán hôm nay.</p>
+            </div>
+
+            <button class="btn" onclick="createOrder()">
+                + Tạo đơn hàng
+            </button>
+
+        </div>
+
+
+        <!-- STATS -->
+        <div class="stats">
+
+            <div class="stat">
+                <div class="stat-top">
+                    <p>Doanh thu hôm nay</p>
+                    <div class="icon">💰</div>
+                </div>
+
+                <h2>12.580.000đ</h2>
+                <div class="green">↑ 12.5% so với hôm qua</div>
+            </div>
+
+
+            <div class="stat">
+                <div class="stat-top">
+                    <p>Đơn hàng hôm nay</p>
+                    <div class="icon">🧾</div>
+                </div>
+
+                <h2>128</h2>
+                <div class="green">↑ 8.2% so với hôm qua</div>
+            </div>
+
+
+            <div class="stat">
+                <div class="stat-top">
+                    <p>Bàn đang phục vụ</p>
+                    <div class="icon">🪑</div>
+                </div>
+
+                <h2>18 / 24</h2>
+                <div class="green">75% số bàn đang sử dụng</div>
+            </div>
+
+
+            <div class="stat">
+                <div class="stat-top">
+                    <p>Khách hôm nay</p>
+                    <div class="icon">👥</div>
+                </div>
+
+                <h2>86</h2>
+                <div class="green">↑ 14 khách mới</div>
+            </div>
+
+        </div>
+
+
+        <!-- TABLE + FOOD -->
+        <div class="grid">
+
+            <!-- TABLE -->
+            <div class="card">
+
+                <div class="card-title">
+                    <h2>🪑 Trạng thái bàn</h2>
+                    <span style="color:#ff6b35;font-size:12px;">
+                        Xem sơ đồ →
+                    </span>
+                </div>
+
+                <div class="tables">
+
+                    <div class="table free" onclick="tableClick(1)">
+                        <strong>Bàn 01</strong>
+                        <small>Trống</small>
+                    </div>
+
+                    <div class="table busy" onclick="tableClick(2)">
+                        <strong>Bàn 02</strong>
+                        <small>4 khách</small>
+                    </div>
+
+                    <div class="table busy" onclick="tableClick(3)">
+                        <strong>Bàn 03</strong>
+                        <small>2 khách</small>
+                    </div>
+
+                    <div class="table free" onclick="tableClick(4)">
+                        <strong>Bàn 04</strong>
+                        <small>Trống</small>
+                    </div>
+
+                    <div class="table wait" onclick="tableClick(5)">
+                        <strong>Bàn 05</strong>
+                        <small>Chờ thanh toán</small>
+                    </div>
+
+                    <div class="table busy" onclick="tableClick(6)">
+                        <strong>Bàn 06</strong>
+                        <small>6 khách</small>
+                    </div>
+
+                    <div class="table free" onclick="tableClick(7)">
+                        <strong>Bàn 07</strong>
+                        <small>Trống</small>
+                    </div>
+
+                    <div class="table busy" onclick="tableClick(8)">
+                        <strong>Bàn 08</strong>
+                        <small>3 khách</small>
+                    </div>
+
+                </div>
+
+                <div class="legend">
+                    <span><i class="dot free"></i> Trống</span>
+                    <span><i class="dot busy"></i> Đang phục vụ</span>
+                    <span><i class="dot wait"></i> Chờ thanh toán</span>
+                </div>
+
+            </div>
+
+
+            <!-- FOOD -->
+            <div class="card">
+
+                <div class="card-title">
+                    <h2>🍜 Món bán chạy</h2>
+                    <span style="color:#ff6b35;font-size:12px;">
+                        Xem tất cả
+                    </span>
+                </div>
+
+
+                <div class="food">
+
+                    <img class="food-img"
+                    src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=200">
+
+                    <div class="food-info">
+                        <strong>Pizza Hải Sản</strong>
+                        <small>128 phần đã bán</small>
+                    </div>
+
+                    <div class="price">159K</div>
+
+                </div>
+
+
+                <div class="food">
+
+                    <img class="food-img"
+                    src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=200">
+
+                    <div class="food-info">
+                        <strong>BBQ Bò Mỹ</strong>
+                        <small>96 phần đã bán</small>
+                    </div>
+
+                    <div class="price">189K</div>
+
+                </div>
+
+
+                <div class="food">
+
+                    <img class="food-img"
+                    src="https://images.unsplash.com/photo-1568901346375-23c9450c58ff?w=200">
+
+                    <div class="food-info">
+                        <strong>Hamburger</strong>
+                        <small>84 phần đã bán</small>
+                    </div>
+
+                    <div class="price">89K</div>
+
+                </div>
+
+
+                <div class="food">
+
+                    <img class="food-img"
+                    src="https://images.unsplash.com/photo-1563379926898-05f4575a45d8?w=200">
+
+                    <div class="food-info">
+                        <strong>Mì Ý Bò Bằm</strong>
+                        <small>72 phần đã bán</small>
+                    </div>
+
+                    <div class="price">99K</div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- REVENUE -->
+        <div class="card" style="margin-top:20px;">
+
+            <div class="card-title">
+                <h2>📈 Doanh thu 7 ngày</h2>
+
+                <select style="padding:7px;border:1px solid #eee;border-radius:7px;">
+                    <option>7 ngày qua</option>
+                    <option>30 ngày qua</option>
+                </select>
+            </div>
+
+
+            <div class="chart">
+
+                <div class="bar-wrap">
+                    <div class="bar" style="height:45%;"></div>
+                    <small>T2</small>
+                </div>
+
+                <div class="bar-wrap">
+                    <div class="bar" style="height:65%;"></div>
+                    <small>T3</small>
+                </div>
+
+                <div class="bar-wrap">
+                    <div class="bar" style="height:52%;"></div>
+                    <small>T4</small>
+                </div>
+
+                <div class="bar-wrap">
+                    <div class="bar" style="height:80%;"></div>
+                    <small>T5</small>
+                </div>
+
+                <div class="bar-wrap">
+                    <div class="bar" style="height:68%;"></div>
+                    <small>T6</small>
+                </div>
+
+                <div class="bar-wrap">
+                    <div class="bar" style="height:92%;"></div>
+                    <small>T7</small>
+                </div>
+
+                <div class="bar-wrap">
+                    <div class="bar" style="height:75%;"></div>
+                    <small>CN</small>
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ORDERS -->
+        <div class="card orders">
+
+            <div class="card-title">
+                <h2>🧾 Đơn hàng gần đây</h2>
+                <span style="color:#ff6b35;font-size:12px;">
+                    Xem tất cả →
+                </span>
+            </div>
+
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>MÃ ĐƠN</th>
+                        <th>KHÁCH HÀNG</th>
+                        <th>BÀN</th>
+                        <th>TỔNG TIỀN</th>
+                        <th>THỜI GIAN</th>
+                        <th>TRẠNG THÁI</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td><strong>#DH1028</strong></td>
+                        <td>Nguyễn Văn Nam</td>
+                        <td>Bàn 03</td>
+                        <td><strong>458.000đ</strong></td>
+                        <td>09:42</td>
+                        <td>
+                            <span class="status cooking">
+                                Đang chế biến
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>#DH1027</strong></td>
+                        <td>Trần Minh Anh</td>
+                        <td>Bàn 08</td>
+                        <td><strong>675.000đ</strong></td>
+                        <td>09:35</td>
+                        <td>
+                            <span class="status done">
+                                Hoàn thành
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>#DH1026</strong></td>
+                        <td>Lê Hoàng Long</td>
+                        <td>Bàn 05</td>
+                        <td><strong>289.000đ</strong></td>
+                        <td>09:21</td>
+                        <td>
+                            <span class="status pending">
+                                Chờ thanh toán
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><strong>#DH1025</strong></td>
+                        <td>Phạm Thu Hà</td>
+                        <td>Bàn 02</td>
+                        <td><strong>198.000đ</strong></td>
+                        <td>09:10</td>
+                        <td>
+                            <span class="status done">
+                                Hoàn thành
+                            </span>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+function createOrder(){
+
+    alert("Mở chức năng tạo đơn hàng 🍜");
+
+}
+
+function tableClick(number){
+
+    alert("Bạn vừa chọn Bàn " + number);
+
+}
+
+
+document.querySelectorAll(".menu a").forEach(item => {
+
+    item.addEventListener("click", function(e){
+
+        e.preventDefault();
+
+        document
+        .querySelectorAll(".menu a")
+        .forEach(a => a.classList.remove("active"));
+
+        this.classList.add("active");
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>
+```
